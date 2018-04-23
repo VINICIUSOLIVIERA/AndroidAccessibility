@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">AndroidAccessibility</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string-array name="array_deficiency">
+        <item>Selecione</item>
+        <item>Não</item>
+        <item>Física</item>
+        <item>Mental</item>
+    </string-array>
+
+</resources>
