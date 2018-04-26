@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="production.tcc.android.tcc.Activity.login.RegisterActivity"
+    tools:context="production.tcc.android.androidaccessibility.Activity.RegisterActivity"
     android:background="#fff">
 
 

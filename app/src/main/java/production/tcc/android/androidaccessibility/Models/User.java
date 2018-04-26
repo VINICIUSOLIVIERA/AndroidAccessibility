@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class User {
 
-    public User(Long id, String name, String user, String password, String date_birth, String gender, String deficiency, String cep, String address, String email) {
+    public User(Long id, String name, String user, String password, String date_birth, int gender, int deficiency, int cep, String address, String email) {
         this.id         = id;
         this.name       = name;
         this.user       = user;
@@ -40,15 +40,15 @@ public class User {
 
     @SerializedName("gender")
     @Expose
-    private String gender;
+    private int gender;
 
     @SerializedName("deficiency")
     @Expose
-    private String deficiency;
+    private int deficiency;
 
     @SerializedName("cep")
     @Expose
-    private String cep;
+    private int cep;
 
     @SerializedName("address")
     @Expose
@@ -98,27 +98,27 @@ public class User {
         this.date_birth = date_birth;
     }
 
-    public String getSex() {
+    public int getGender() {
         return gender;
     }
 
-    public void setSex(String gender) {
+    public void setGender(int gender) {
         this.gender = gender;
     }
 
-    public String getDeficiency() {
+    public int getDeficiency() {
         return deficiency;
     }
 
-    public void setDeficiency(String deficiency) {
+    public void setDeficiency(int deficiency) {
         this.deficiency = deficiency;
     }
 
-    public String getCep() {
+    public int getCep() {
         return cep;
     }
 
-    public void setCep(String cep) {
+    public void setCep(int cep) {
         this.cep = cep;
     }
 

@@ -8,6 +8,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
+import production.tcc.android.androidaccessibility.Models.User;
 import production.tcc.android.androidaccessibility.R;
 
 public class UserUtil extends Activity{
@@ -35,8 +36,6 @@ public class UserUtil extends Activity{
     public UserUtil(Activity activity){
         this.activity        = activity;
         this.edit_name       = activity.findViewById(R.id.form_register_name);
-        this.activity        = activity;
-        this.edit_name       = activity.findViewById(R.id.form_register_name);
         this.edit_user       = activity.findViewById(R.id.form_register_user);
         this.edit_password   = activity.findViewById(R.id.form_register_password);
         this.edit_date_birth = activity.findViewById(R.id.form_register_date);
@@ -53,34 +52,30 @@ public class UserUtil extends Activity{
         this.user       = this.edit_user.getText().toString();
         this.password   = this.edit_password.getText().toString();
         this.date_birth = this.edit_date_birth.getText().toString();
-
-        int gender_index = this.edit_gender.getCheckedRadioButtonId();
-        Log.d("Values_gender", ""+gender_index);
-        RadioButton selected_gender = (RadioButton) this.activity.findViewById(gender_index);
-        if(selected_gender.getText().toString().equals("Masculino")){
-            this.gender = 1;
-        }else if(selected_gender.getText().toString().equals("Feminino")){
-            this.gender = 2;
-        }else{
-            this.gender = 0;
-        }
-
-        String deficiency = edit_deficiency.getSelectedItem().toString();
-        if(deficiency.equals("Selecione")){
-            this.deficiency = 0;
-        }else if(deficiency.equals("Não")){
-            this.deficiency = 1;
-        }else if(deficiency.equals("Física")){
-            this.deficiency = 2;
-        }else if(deficiency.equals("Mental")){
-            this.deficiency = 3;
-        }else{
-            this.deficiency = 0;
-        }
-
-        this.cep     = Integer.parseInt(this.edit_cep.getText().toString());
+        this.gender     = getGender();
+        this.deficiency = getDeficiency();
+        this.cep        = getCep();
         this.address = this.edit_address.getText().toString();
         this.email   = this.edit_email.getText().toString();
+    }
+
+    public int getGender(){
+        int gender_index = this.edit_gender.getCheckedRadioButtonId();
+        RadioButton selected_gender = (RadioButton) this.activity.findViewById(gender_index);
+        return (selected_gender.getText().toString().equals("Masculino") ? 1 : (selected_gender.getText().toString().equals("Feminino") ? 2 : 0 ));
+    }
+
+    public int getDeficiency(){
+        String deficiency = edit_deficiency.getSelectedItem().toString();
+        return (deficiency.equals("Selecione") ? 0 : (deficiency.equals("Não") ? 1 : (deficiency.equals("Física") ? 2 : (deficiency.equals("Mental") ? 3 : 0))));
+    }
+
+    public int getCep(){
+        return (this.edit_cep.getText().toString().isEmpty() ? 0 : Integer.parseInt(this.edit_cep.getText().toString()));
+    }
+
+    public User getUser(){
+        return new User(null, this.name, this.user, this.password, this.date_birth, this.gender, this.deficiency, this.cep, this.address, this.email);
     }
 
     @Override
