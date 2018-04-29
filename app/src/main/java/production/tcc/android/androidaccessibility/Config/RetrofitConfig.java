@@ -12,7 +12,7 @@ public class RetrofitConfig {
     public static Retrofit init(){
         OkHttpClient cliente = new OkHttpClient();
         Gson gson = new GsonBuilder().setLenient().create();
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://192.168.0.145:8000/api/v1/").addConverterFactory(GsonConverterFactory.create(gson)).client(cliente).build();
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://192.168.0.100:8000/api/v1/").addConverterFactory(GsonConverterFactory.create(gson)).client(cliente).build();
         return retrofit;
     }
 }

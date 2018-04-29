@@ -69,11 +69,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         String value = u.getSharendPreferences("teste");
 
-        try {
-            u.showAlert(null, "", "Sharend Preferences", value);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
 //        UserUtil user_util = new UserUtil(RegisterActivity.this);
 //        user_util.serialize();

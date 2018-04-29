@@ -1,8 +1,6 @@
 package production.tcc.android.androidaccessibility.Util;
 
 import android.app.Activity;
-import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;

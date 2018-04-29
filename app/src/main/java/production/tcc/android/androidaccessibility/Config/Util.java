@@ -10,36 +10,51 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class Util {
 
     private Context context;
     // Loading
     private ProgressDialog dialog;
-
     // Sharend Preferences
     SharedPreferences shared_preferences;
+    // Alert
+    AlertDialog.Builder alert;
 
     public Util(Context context){
         this.context = context;
     }
 
-    // Alert
-    public void showAlert(String values, String type, String title, String message) throws JSONException {
-        AlertDialog.Builder alert = new AlertDialog.Builder(this.context);
+    // Alert simple
+    public void showAlert(String title, String message){
+        if(this.alert == null)
+            this.alert   = new AlertDialog.Builder(context);
 
-        if(values != null){
-            JSONObject json = new JSONObject(values);
-            json = json.getJSONObject("error");
-            JSONArray array = json.names();
-            Object object;
-            for(int i = 0; i < array.length(); i++){
-                object = array.get(i);
-                message += json.getString(object.toString())+"\n";
-            }
-        }
         alert.setTitle(title);
         alert.setMessage(message);
         alert.show();
+    }
+
+    // Alert Json
+    public void showAlertJson(String values, String title, String message) throws JSONException {
+        JSONObject json = new JSONObject(values);
+        json = json.getJSONObject("error");
+        JSONArray array = json.names();
+        Object object;
+        for(int i = 0; i < array.length(); i++){
+            object = array.get(i);
+            message += json.getString(object.toString())+"\n";
+        }
+        this.showAlert(title, message);
+    }
+
+    // Alert Array
+    public void showAlertArray(ArrayList<String> values, String title, String message){
+        for(String row : values){
+            message += row+"\n";
+        }
+        this.showAlert(title, message);
     }
 
     // Loading
