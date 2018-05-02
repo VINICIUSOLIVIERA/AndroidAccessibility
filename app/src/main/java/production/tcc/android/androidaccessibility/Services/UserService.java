@@ -12,16 +12,16 @@ import retrofit2.http.Path;
 
 public interface UserService {
 
-    @GET("users") // ALL USER
+    @GET("users")
     public Call<List<User>> all();
 
-    @POST("user") // SAVE USER
+    @POST("user")
     public Call<User> create(@Body User user);
 
-    @PUT("user/{id}") // SAVE USER
+    @PUT("user/{id}")
     public Call<User> edit(@Body User user, @Path("id") Long id);
 
-    @GET("user/{id}") // USER BY 'id'
+    @GET("user/{id}")
     public Call<User> find(@Path("id") int id);
 
 }

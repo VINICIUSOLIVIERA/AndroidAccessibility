@@ -32,15 +32,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-//        String user_id        = util.getSharendPreferences("id");
-//        String user_name      = util.getSharendPreferences("user");
-//        String user_password  = util.getSharendPreferences("password");
-//        String user_token     = util.getSharendPreferences("token");
-//        String user_connected = util.getSharendPreferences("connected");
-//
-//        String message = "ID: "+user_id+"\n"+"Nome: "+user_name+"\n"+"Senha: "+user_password+"\n"+"Token: "+user_token+"\n"+"Conectado: "+user_connected;
-//
-//        util.showAlert("Dados do usuário", message);
+        this.credentials();
 
         TextView register = findViewById(R.id.form_login_link_register);
         register.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +80,6 @@ public class LoginActivity extends AppCompatActivity {
                                 util.setSharendPreferences("connected", ""+loginUtil.isConnected());
 
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                                 startActivity(intent);
                                 finish();
 
@@ -106,9 +97,24 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    util.hideLoading();
                     util.showAlert("Erro", "Verifique sua rede.");
                 }
             });
         }
+    }
+
+    public void credentials(){
+        util.showLoading("Carregando", "Aguarde");
+        String id = util.getSharendPreferences("id");
+        if(!id.equals("Valeu not found")){
+            String connected = util.getSharendPreferences("connected");
+            if(connected.equals("true")){
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }
+        util.hideLoading();
     }
 }

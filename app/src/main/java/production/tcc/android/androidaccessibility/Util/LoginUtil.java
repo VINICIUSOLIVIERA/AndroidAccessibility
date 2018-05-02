@@ -1,10 +1,14 @@
 package production.tcc.android.androidaccessibility.Util;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import java.util.ArrayList;
 
+import production.tcc.android.androidaccessibility.Activity.LoginActivity;
+import production.tcc.android.androidaccessibility.Config.Util;
 import production.tcc.android.androidaccessibility.R;
 
 public class LoginUtil extends Activity{
@@ -17,9 +21,11 @@ public class LoginUtil extends Activity{
     private boolean connected;
 
     public LoginUtil(Activity activity){
-        this.user_edit      = activity.findViewById(R.id.form_login_user);
-        this.passoword_edit = activity.findViewById(R.id.form_login_password);
-        this.connected_edit = activity.findViewById(R.id.form_login_connected);
+        if(activity != null){
+            this.user_edit      = activity.findViewById(R.id.form_login_user);
+            this.passoword_edit = activity.findViewById(R.id.form_login_password);
+            this.connected_edit = activity.findViewById(R.id.form_login_connected);
+        }
     }
 
     public void serialize(){
