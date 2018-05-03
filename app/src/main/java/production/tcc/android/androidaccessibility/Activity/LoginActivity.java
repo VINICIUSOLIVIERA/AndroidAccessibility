@@ -1,6 +1,7 @@
 package production.tcc.android.androidaccessibility.Activity;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,11 +14,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
+import production.tcc.android.androidaccessibility.Config.DataBase;
 import production.tcc.android.androidaccessibility.Config.RetrofitConfig;
 import production.tcc.android.androidaccessibility.Config.Util;
+import production.tcc.android.androidaccessibility.Models.User;
 import production.tcc.android.androidaccessibility.R;
 import production.tcc.android.androidaccessibility.Services.LoginService;
 import production.tcc.android.androidaccessibility.Util.LoginUtil;
+import production.tcc.android.androidaccessibility.Util.UserUtil;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,7 +29,9 @@ import retrofit2.Retrofit;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private Util util = new Util(this);
+    private DataBase dbconfig  = new DataBase(this);
+    private Util util          = new Util(this);
+    private UserUtil user_util = new UserUtil(null);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,26 +69,29 @@ public class LoginActivity extends AppCompatActivity {
             util.showLoading("Fazendo login", "Aguarde um momento");
             Retrofit retrofit       = RetrofitConfig.init();
             LoginService service    = retrofit.create(LoginService.class);
-            Call<ResponseBody> call = service.login(loginUtil.getUser(), loginUtil.getPassword());
-            call.enqueue(new Callback<ResponseBody>() {
+            Call<User> call = service.login(loginUtil.getUser(), loginUtil.getPassword());
+            call.enqueue(new Callback<User>() {
                 @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                public void onResponse(Call<User> call, Response<User> response) {
                     util.hideLoading();
                     if(response != null){
                         int code = response.code();
                         if(code == 200){
                             try {
-                                JSONObject json = new JSONObject(response.body().string());
-                                util.setSharendPreferences("id", json.getString("id"));
-                                util.setSharendPreferences("user", json.getString("user"));
-                                util.setSharendPreferences("password", json.getString("password"));
-                                util.setSharendPreferences("token", json.getString("token"));
-                                util.setSharendPreferences("connected", ""+loginUtil.isConnected());
+                                User user = response.body();
+                                if(user_util.saveDB(LoginActivity.this, user)){
+                                    util.setSharendPreferences("id", ""+user.getId());
+                                    util.setSharendPreferences("user", user.getUser());
+                                    util.setSharendPreferences("password", user.getPassword());
+                                    util.setSharendPreferences("token", user.getToken());
+                                    util.setSharendPreferences("connected", ""+loginUtil.isConnected());
 
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                startActivity(intent);
-                                finish();
-
+                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }else{
+                                    util.showAlert("Erro", "Ops!!! Algum problema aconteceu.");
+                                }
                             } catch (Exception e) {
                                 util.showAlert("Ops!!!", "Algo de errado aconteceu. Tente novamente.");
                                 Log.d("Error Catch", e.getMessage());
@@ -96,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                public void onFailure(Call<User> call, Throwable t) {
                     util.hideLoading();
                     util.showAlert("Erro", "Verifique sua rede.");
                 }

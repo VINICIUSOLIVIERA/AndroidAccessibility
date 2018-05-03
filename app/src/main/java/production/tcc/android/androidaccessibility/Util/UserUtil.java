@@ -1,11 +1,16 @@
 package production.tcc.android.androidaccessibility.Util;
 
 import android.app.Activity;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
+import production.tcc.android.androidaccessibility.Config.DataBase;
 import production.tcc.android.androidaccessibility.Models.User;
 import production.tcc.android.androidaccessibility.R;
 
@@ -47,16 +52,16 @@ public class UserUtil extends Activity{
 
     }
 
-    public void serialize(){
-        this.name       = this.edit_name.getText().toString();
-        this.user       = this.edit_user.getText().toString();
-        this.password   = this.edit_password.getText().toString();
+    public void serialize() {
+        this.name = this.edit_name.getText().toString();
+        this.user = this.edit_user.getText().toString();
+        this.password = this.edit_password.getText().toString();
         this.date_birth = this.edit_date_birth.getText().toString();
-        this.gender     = getGender();
+        this.gender = getGender();
         this.deficiency = getDeficiency();
-        this.cep        = getCep();
-        this.address    = this.edit_address.getText().toString();
-        this.email      = this.edit_email.getText().toString();
+        this.cep = getCep();
+        this.address = this.edit_address.getText().toString();
+        this.email = this.edit_email.getText().toString();
     }
 
     public int getGender(){
@@ -76,6 +81,33 @@ public class UserUtil extends Activity{
 
     public User getUser(){
         return new User(null, this.name, this.user, this.password, this.date_birth, this.gender, this.deficiency, this.cep, this.address, this.email);
+    }
+
+    public boolean saveDB(Context context, User user){
+        try {
+            DataBaseUtil dbutil = new DataBaseUtil(context);
+
+            ContentValues values = new ContentValues();
+            values.put("id", 1);
+            values.put("user_id", user.getId());
+            values.put("name", user.getName());
+            values.put("user", user.getUser());
+            values.put("password", user.getPassword());
+            values.put("date_birth", user.getDate_birth());
+            values.put("gender", user.getGender());
+            values.put("deficiency", user.getDeficiency());
+            values.put("cep", user.getCep());
+            values.put("address", user.getAddress());
+            values.put("email", user.getEmail());
+
+            dbutil.destroyAll("user");
+            dbutil.insert("user", values);
+
+            return true;
+        }catch (Exception e){
+            Log.d("USER_SAVE_DB", e.getMessage());
+            return false;
+        }
     }
 
     @Override

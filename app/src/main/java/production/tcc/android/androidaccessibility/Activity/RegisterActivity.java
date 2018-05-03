@@ -1,7 +1,9 @@
 package production.tcc.android.androidaccessibility.Activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -10,6 +12,7 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import production.tcc.android.androidaccessibility.Config.RetrofitConfig;
 import production.tcc.android.androidaccessibility.Config.Util;
@@ -24,7 +27,7 @@ import retrofit2.Retrofit;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private Util u = new Util(this);
+    private Util util = new Util(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
         RadioButton gender = findViewById(R.id.radio_gender_m);
         gender.setChecked(true);
 
-        u.setSharendPreferences("teste", "Hello World!!!!!");
+        util.setSharendPreferences("teste", "Hello World!!!!!");
 
     }
 
@@ -56,7 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_form_register_save:
-//                u.showLoading("Enviando dados", "Dados sendo processados...");
+                util.showLoading("Enviando dados", "Dados sendo processados...");
                 this.saveUser();
                 break;
             default:
@@ -67,36 +70,57 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void saveUser(){
 
-        String value = u.getSharendPreferences("teste");
+        final UserUtil user_util = new UserUtil(RegisterActivity.this);
+        user_util.serialize();
+        User user = user_util.getUser();
 
+        Retrofit retrofit = new RetrofitConfig().init();
+        UserService service = retrofit.create(UserService.class);
+        Call<User> call = service.create(user);
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(response != null){
+                    try {
+                        util.hideLoading();
+                        int code = response.code();
+                        if(code == 201){
+                            try {
+                                User user = response.body();
+                                if(user_util.saveDB(RegisterActivity.this, user)){
+                                    util.setSharendPreferences("id", ""+user.getId());
+                                    util.setSharendPreferences("user", user.getUser());
+                                    util.setSharendPreferences("password", user.getPassword());
+                                    util.setSharendPreferences("token", user.getToken());
+                                    util.setSharendPreferences("connected", "true");
 
-//        UserUtil user_util = new UserUtil(RegisterActivity.this);
-//        user_util.serialize();
-//
-//        User user = user_util.getUser();
-//        Long id = 5L;
-//
-//        Retrofit retrofit = new RetrofitConfig().init();
-//        UserService service = retrofit.create(UserService.class);
-//        Call<User> call = service.edit(user, id);
-//        call.enqueue(new Callback<User>() {
-//            @Override
-//            public void onResponse(Call<User> call, Response<User> response) {
-//                if(response != null){
-//                    try {
-//                        u.hideLoading();
-//                        u.showAlert(response.errorBody().string(), "error", "Erro ao salvar Usuário", "");
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<User> call, Throwable t) {
-//                // Code....
-//            }
-//        });
+                                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }else{
+                                    util.showAlert("Erro", "Ops!!! Algum problema aconteceu.");
+                                }
+                            } catch (Exception e) {
+                                util.showAlert("Ops!!!", "Algo de errado aconteceu. Tente novamente.");
+                                Log.d("Error Catch", e.getMessage());
+                            }
+                        }else if(code == 406){
+                            util.showAlertJson(response.errorBody().string(), "Error", "");
+                        }else if(code == 500){
+                            util.showAlert("Ops!!!", "Algo de errado aconteceu. Tente novamente.");
+                        }
+                    } catch (Exception e) {
+                        util.showAlert("Ops!!!", "Algo de errado aconteceu. Tente novamente.");
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                // Code....
+            }
+        });
     }
 
 }

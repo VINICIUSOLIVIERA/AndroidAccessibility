@@ -21,6 +21,14 @@
             android:icon="@drawable/ic_person"
             android:title="Perfil" />
         <item
+            android:id="@+id/nav_data"
+            android:icon="@drawable/ic_eye"
+            android:title="Ver DB" />
+        <item
+            android:id="@+id/nav_sharend"
+            android:icon="@drawable/ic_eye"
+            android:title="Ver Sharend" />
+        <item
             android:id="@+id/nav_exit"
             android:icon="@drawable/ic_power"
             android:title="Sair" />

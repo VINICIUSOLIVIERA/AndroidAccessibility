@@ -15,11 +15,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import production.tcc.android.androidaccessibility.Config.Util;
+import production.tcc.android.androidaccessibility.Models.User;
 import production.tcc.android.androidaccessibility.R;
+import production.tcc.android.androidaccessibility.Util.DataBaseUtil;
 import production.tcc.android.androidaccessibility.Util.LoginUtil;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private Util util = new Util(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,13 +62,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -93,7 +90,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_profile) {
 
         } else if (id == R.id.nav_exit) {
-            Util util = new Util(this);
+
             util.showLoading("Saindo", "Aguarde...");
             try{
                 util.destroySharendPreferences("id");
@@ -109,6 +106,14 @@ public class MainActivity extends AppCompatActivity
             }finally {
                 util.hideLoading();
             }
+        }else if (id == R.id.nav_data) {
+            DataBaseUtil dbutil = new DataBaseUtil(MainActivity.this);
+            User user = dbutil.getUser();
+            String message = "USER ID: "+user.getId()+"\nUSER NAME: "+user.getName()+"\nUSER PASSWORD: "+user.getPassword()+"\nDATA NASC.: "+user.getDate_birth()+"\nGENDER: "+(user.getGender() == 1 ? "Masculino" : "Feminino")+"\nDEFICIENCY: "+user.getDeficiency()+"\nCEP: "+user.getCep()+"\nADDRESS: "+user.getAddress()+"\nEMAIL: "+user.getEmail();
+            util.showAlert("Dados do banco", message);
+        }else if (id == R.id.nav_sharend) {
+            String message = "ID: "+util.getSharendPreferences("id")+"\nUSER NAME: "+util.getSharendPreferences("user")+"\nPASSWORD: "+ util.getSharendPreferences("password")+"\nTOKEN: "+util.getSharendPreferences("token");
+            util.showAlert("Dados do sharend preferences", message);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
