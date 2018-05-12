@@ -5,19 +5,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class User {
 
-    public User(Long id, String name, String user, String password, String date_birth, int gender, int deficiency, int cep, String address, String email) {
-        this.id         = id;
-        this.name       = name;
-        this.user       = user;
-        this.password   = password;
-        this.date_birth = date_birth;
-        this.gender     = gender;
-        this.deficiency = deficiency;
-        this.cep        = cep;
-        this.address    = address;
-        this.email      = email;
-    }
-
     @SerializedName("id")
     @Expose
     private Long id;
@@ -60,8 +47,20 @@ public class User {
 
     @SerializedName("remember_token")
     @Expose
-
     private String token;
+
+    public User(Long id, String name, String user, String password, String date_birth, int gender, int deficiency, int cep, String address, String email) {
+        this.id = id;
+        this.name = name;
+        this.user = user;
+        this.password = password;
+        this.date_birth = date_birth;
+        this.gender = gender;
+        this.deficiency = deficiency;
+        this.cep = cep;
+        this.address = address;
+        this.email = email;
+    }
 
     public Long getId() {
         return id;

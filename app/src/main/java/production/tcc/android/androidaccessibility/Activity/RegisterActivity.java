@@ -11,9 +11,6 @@ import android.widget.ArrayAdapter;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import production.tcc.android.androidaccessibility.Config.RetrofitConfig;
 import production.tcc.android.androidaccessibility.Config.Util;
 import production.tcc.android.androidaccessibility.Models.User;
@@ -51,14 +48,14 @@ public class RegisterActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         MenuInflater menu_inflater = getMenuInflater();
-        menu_inflater.inflate(R.menu.form_register, menu);
+        menu_inflater.inflate(R.menu.button_save, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.menu_form_register_save:
+            case R.id.menu_form_save:
                 util.showLoading("Enviando dados", "Dados sendo processados...");
                 this.saveUser();
                 break;

@@ -1,5 +1,6 @@
 package production.tcc.android.androidaccessibility.Activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 import org.json.JSONObject;
 
@@ -56,7 +64,28 @@ public class LoginActivity extends AppCompatActivity {
                 login();
             }
         });
+
+        Dexter.withActivity(this)
+                .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                .withListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse response) {
+
+                    }
+
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse response) {
+
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+
+                    }
+                })
+                .check();
     }
+
 
     public void login(){
         final LoginUtil loginUtil = new LoginUtil(LoginActivity.this);
@@ -96,7 +125,7 @@ public class LoginActivity extends AppCompatActivity {
                                 util.showAlert("Ops!!!", "Algo de errado aconteceu. Tente novamente.");
                                 Log.d("Error Catch", e.getMessage());
                             }
-                        }else if(code == 401){
+                        }else if(code == 401 || code == 404){
                             util.showAlert("Erro", "Credênciais inválidas. Tente novamente.");
                         }else{
                             util.showAlert("Erro", "Erro interno. Tente novamente mais tarde!");

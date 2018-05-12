@@ -38,16 +38,16 @@ public class UserUtil extends Activity{
 
     public UserUtil(Activity activity){
         if(activity != null){
-            this.activity        = activity;
-            this.edit_name       = activity.findViewById(R.id.form_register_name);
-            this.edit_user       = activity.findViewById(R.id.form_register_user);
-            this.edit_password   = activity.findViewById(R.id.form_register_password);
+            this.activity = activity;
+            this.edit_name = activity.findViewById(R.id.form_register_name);
+            this.edit_user = activity.findViewById(R.id.form_register_user);
+            this.edit_password = activity.findViewById(R.id.form_register_password);
             this.edit_date_birth = activity.findViewById(R.id.form_register_date);
-            this.edit_gender     = activity.findViewById(R.id.form_register_gender);
+            this.edit_gender = activity.findViewById(R.id.form_register_gender);
             this.edit_deficiency = activity.findViewById(R.id.form_register_deficiency);
-            this.edit_cep        = activity.findViewById(R.id.form_register_cep);
-            this.edit_address    = activity.findViewById(R.id.form_register_address);
-            this.edit_email      = activity.findViewById(R.id.form_register_email);
+            this.edit_cep = activity.findViewById(R.id.form_register_cep);
+            this.edit_address = activity.findViewById(R.id.form_register_address);
+            this.edit_email = activity.findViewById(R.id.form_register_email);
         }
 
     }
