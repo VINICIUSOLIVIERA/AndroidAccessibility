@@ -1,56 +1,32 @@
 package production.tcc.android.androidaccessibility.Activity;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-import production.tcc.android.androidaccessibility.Config.RetrofitConfig;
 import production.tcc.android.androidaccessibility.Config.Util;
-import production.tcc.android.androidaccessibility.Models.Seek;
+import production.tcc.android.androidaccessibility.Helpers.MapHelper;
 import production.tcc.android.androidaccessibility.Models.User;
 import production.tcc.android.androidaccessibility.R;
-import production.tcc.android.androidaccessibility.Services.SeekService;
 import production.tcc.android.androidaccessibility.Util.DataBaseUtil;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
-public class MainActivity extends AppCompatActivity implements
-        NavigationView.OnNavigationItemSelectedListener,
-        OnMapReadyCallback,
-        LocationListener{
+public class MainActivity extends MapHelper implements
+        NavigationView.OnNavigationItemSelectedListener{
 
     private Util util = new Util(this);
-    private GoogleMap map;
     private MapView mapView;
-    private LatLng locationCurrent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,18 +69,6 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -152,70 +116,6 @@ public class MainActivity extends AppCompatActivity implements
         return true;
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        MapsInitializer.initialize(this);
-        map = googleMap;
-        LatLng jp = new LatLng(-7.115, -34.86306);
-        map.addMarker(new MarkerOptions().position(jp).title("João Pessoa"));
-        map.moveCamera(CameraUpdateFactory.newLatLng(jp));
-
-        this.checkPermissionAccessGps();
-        locationCurrent = this.userLocationCurrent();
-        if(locationCurrent != null){
-            this.moveCamera(locationCurrent, 15, true);
-        }
-    }
-
-    public LatLng userLocationCurrent(){
-        LocationManager locationManager = (LocationManager) this.getSystemService(this.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        String bestProvider = locationManager.getBestProvider(criteria, true);
-
-        @SuppressLint("MissingPermission")
-        Location location = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
-
-        if (location != null) {
-            return new LatLng(location.getLatitude(), location.getLongitude());
-        }
-        return null;
-    }
-
-    public void checkPermissionAccessGps(){
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "NOT PERMISSION ACCESS GPS", Toast.LENGTH_LONG).show();
-        }
-        map.setMyLocationEnabled(true);
-    }
-
-    public void moveCamera(LatLng location, float zoom, boolean animate){
-        zoom = zoom != 0 ? zoom : 15;
-        if(animate)
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, zoom));
-        else
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, zoom));
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        Toast.makeText(this, "Update", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String s) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String s) {
-
-    }
-
     public void changeCreateSeek(){
         LatLng location = this.userLocationCurrent();
         Intent intent = new Intent(this, CreateSeekActivity.class);
@@ -224,9 +124,9 @@ public class MainActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
-    public void addMarker(String title, String description, double lat, double lng){
-        MarkerOptions marker = new MarkerOptions().position(new LatLng(lat, lng)).title(title).snippet(description);
-        map.addMarker(marker);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Toast.makeText(this, "Teste result", Toast.LENGTH_LONG).show();
+        super.onActivityResult(requestCode, resultCode, data);
     }
-
 }

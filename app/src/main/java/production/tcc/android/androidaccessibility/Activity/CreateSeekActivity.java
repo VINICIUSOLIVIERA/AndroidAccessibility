@@ -79,6 +79,7 @@ public class CreateSeekActivity extends AppCompatActivity {
                 if(response != null){
                     int code = response.code();
                     if(code == 201){
+                        setResult(RESULT_OK, new Intent());
                         finish();
                         util.showAlert("Solicitação", "Solicitação realizada com sucesso.");
                     }else if(code == 406){
