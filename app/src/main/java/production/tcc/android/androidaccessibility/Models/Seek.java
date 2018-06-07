@@ -97,4 +97,9 @@ public class Seek {
     public void setCreated(String created_at) {
         this.created_at = created_at;
     }
+
+    @Override
+    public String toString() {
+        return this.topic + " - " +this.description;
+    }
 }

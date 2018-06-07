@@ -11,7 +11,7 @@ import production.tcc.android.androidaccessibility.Activity.LoginActivity;
 import production.tcc.android.androidaccessibility.Config.Util;
 import production.tcc.android.androidaccessibility.R;
 
-public class LoginUtil extends Activity{
+public class LoginUtil extends Activity implements UtilInterface{
 
     private EditText user_edit;
     private String user;
@@ -28,12 +28,14 @@ public class LoginUtil extends Activity{
         }
     }
 
+    @Override
     public void serialize(){
         this.user      = user_edit.getText().toString();
         this.password  = passoword_edit.getText().toString();
         this.connected = connected_edit.isChecked();
     }
 
+    @Override
     public ArrayList<String> validation(){
         ArrayList<String> validate = new ArrayList<String>();
 

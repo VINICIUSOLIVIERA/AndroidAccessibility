@@ -3,6 +3,10 @@ package production.tcc.android.androidaccessibility.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,16 +21,19 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 
 import production.tcc.android.androidaccessibility.Config.Util;
+import production.tcc.android.androidaccessibility.Fragment.AllSeekFragment;
+import production.tcc.android.androidaccessibility.Fragment.MapsFragment;
 import production.tcc.android.androidaccessibility.Helpers.MapHelper;
 import production.tcc.android.androidaccessibility.Models.User;
 import production.tcc.android.androidaccessibility.R;
 import production.tcc.android.androidaccessibility.Util.DataBaseUtil;
 
-public class MainActivity extends MapHelper implements
+public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener{
 
     private Util util = new Util(this);
     private MapView mapView;
+    private FragmentTransaction fragmentTransaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +59,13 @@ public class MainActivity extends MapHelper implements
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // Map
-        mapView = findViewById(R.id.map);
-        if (mapView != null) {
-            mapView.onCreate(null);
-            mapView.onResume();
-            mapView.getMapAsync((OnMapReadyCallback) this);
-        }
+        /***
+         * Map
+         */
+        Fragment map_fragment = new MapsFragment();
+        this.fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        this.fragmentTransaction.add(R.id.main_content, map_fragment);
+        this.fragmentTransaction.commit();
     }
 
     @Override
@@ -74,13 +81,15 @@ public class MainActivity extends MapHelper implements
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_register) {
 
         } else if (id == R.id.nav_all) {
-
+            Fragment seek_fragment = new AllSeekFragment();
+            this.fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            this.fragmentTransaction.replace(R.id.main_content, seek_fragment);
+            this.fragmentTransaction.commit();
         } else if (id == R.id.nav_trending) {
 
         } else if (id == R.id.nav_profile) {
@@ -117,16 +126,16 @@ public class MainActivity extends MapHelper implements
     }
 
     public void changeCreateSeek(){
-        LatLng location = this.userLocationCurrent();
-        Intent intent = new Intent(this, CreateSeekActivity.class);
-        intent.putExtra("lat", location.latitude);
-        intent.putExtra("lng", location.longitude);
-        startActivity(intent);
+//        LatLng location = this.
+//        Intent intent = new Intent(this, CreateSeekActivity.class);
+//        intent.putExtra("lat", location.latitude);
+//        intent.putExtra("lng", location.longitude);
+//        startActivityForResult(intent, RESULT_OK);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Toast.makeText(this, "Teste result", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Result SIM", Toast.LENGTH_SHORT).show();
         super.onActivityResult(requestCode, resultCode, data);
     }
 }

@@ -34,7 +34,8 @@
         <activity
             android:name=".Activity.MapsActivity"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".Activity.CreateSeekActivity"></activity>
+        <activity android:name=".Activity.CreateSeekActivity" />
+
     </application>
 
 </manifest>

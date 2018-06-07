@@ -9,6 +9,4 @@
     tools:showIn="@layout/app_bar_main"
     android:id="@+id/main_content">
 
-    <include layout="@layout/activity_maps"/>
-
 </android.support.constraint.ConstraintLayout>

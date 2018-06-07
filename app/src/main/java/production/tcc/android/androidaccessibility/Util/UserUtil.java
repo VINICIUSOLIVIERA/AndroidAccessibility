@@ -10,11 +10,13 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
+import java.util.ArrayList;
+
 import production.tcc.android.androidaccessibility.Config.DataBase;
 import production.tcc.android.androidaccessibility.Models.User;
 import production.tcc.android.androidaccessibility.R;
 
-public class UserUtil extends Activity{
+public class UserUtil extends Activity implements UtilInterface{
 
     private Activity activity;
     private EditText edit_name;
@@ -52,6 +54,7 @@ public class UserUtil extends Activity{
 
     }
 
+    @Override
     public void serialize() {
         this.name = this.edit_name.getText().toString();
         this.user = this.edit_user.getText().toString();
@@ -62,6 +65,11 @@ public class UserUtil extends Activity{
         this.cep = getCep();
         this.address = this.edit_address.getText().toString();
         this.email = this.edit_email.getText().toString();
+    }
+
+    @Override
+    public ArrayList<String> validation() {
+        return null;
     }
 
     public int getGender(){

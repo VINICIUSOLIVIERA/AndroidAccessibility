@@ -8,7 +8,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -18,10 +18,17 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapHelper extends AppCompatActivity implements OnMapReadyCallback, LocationListener {
+public abstract class MapHelper extends Fragment implements OnMapReadyCallback, LocationListener {
 
-    public GoogleMap map;
-    private LatLng locationCurrent;
+    protected GoogleMap map;
+    protected LatLng locationCurrent;
+
+    // ZOOM
+    public int ZOOM_WORLD = 1, // MIN ZOOM
+            ZOOM_EARTH = 5,
+            ZOOM_CITY = 10,
+            ZOOM_STREET = 15,
+            ZOOM_BUILDINGS = 20; // MAX ZOOM
 
     public void moveCamera(LatLng location, float zoom, boolean animate){
         zoom = zoom != 0 ? zoom : 15;
@@ -32,7 +39,7 @@ public class MapHelper extends AppCompatActivity implements OnMapReadyCallback, 
     }
 
     public LatLng userLocationCurrent(){
-        LocationManager locationManager = (LocationManager) this.getSystemService(this.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(getActivity().LOCATION_SERVICE);
         @SuppressLint("MissingPermission")
         Location location = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
 
@@ -48,8 +55,8 @@ public class MapHelper extends AppCompatActivity implements OnMapReadyCallback, 
     }
 
     public void checkPermissionAccessGps(){
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "NOT PERMISSION ACCESS GPS", Toast.LENGTH_LONG).show();
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(getContext(), "NOT PERMISSION ACCESS GPS", Toast.LENGTH_LONG).show();
         }
         this.map.setMyLocationEnabled(true);
     }
@@ -59,7 +66,7 @@ public class MapHelper extends AppCompatActivity implements OnMapReadyCallback, 
      * */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        MapsInitializer.initialize(this);
+        MapsInitializer.initialize(getContext());
         this.map = googleMap;
 //        LatLng jp = new LatLng(-7.115, -34.86306);
 //        this.map.addMarker(new MarkerOptions().position(jp).title("João Pessoa"));
@@ -71,12 +78,10 @@ public class MapHelper extends AppCompatActivity implements OnMapReadyCallback, 
             this.moveCamera(locationCurrent, 15, true);
         }
     }
-    /***
-    * implements - LocationListener
-    * */
+
     @Override
     public void onLocationChanged(Location location) {
-        Toast.makeText(this, "Update", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Update", Toast.LENGTH_SHORT).show();
     }
 
     @Override

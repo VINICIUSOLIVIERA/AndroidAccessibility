@@ -24,7 +24,7 @@ public interface SeekService {
     @POST("seek/user/{user_id}")
     public Call<Seek> create(@Path("user_id") Long user_id, @Body Seek seek);
 
-    @PUT("seek/{seek_id}/user/{user_id}")
-    public Call<Seek> edit(@Path("seek_id") Long seek_id, @Path("user_id") Long user_id);
+    @PUT("user/{user_id}/seek/{seek_id}")
+    public Call<Seek> edit(@Body Seek seek, @Path("user_id") Long user_id, @Path("seek_id") Long seek_id);
 
 }
