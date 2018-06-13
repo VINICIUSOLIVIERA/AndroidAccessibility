@@ -51,24 +51,32 @@ public class AllSeekFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
+        final Util util = new Util(getContext());
+        Long user_id = Long.parseLong(util.getSharendPreferences("id"));
+        util.showLoading("Aguarde!", "As solicitações estão sendo carregadas.");
         list = getActivity().findViewById(R.id.frame_all_seek_list);
 
         Retrofit retrofit = new RetrofitConfig().init();
         SeekService service = retrofit.create(SeekService.class);
-        Call<List<Seek>> call = service.allByUser(1L);
+        Call<List<Seek>> call = service.allByUser(user_id);
         call.enqueue(new Callback<List<Seek>>() {
             @Override
             public void onResponse(Call<List<Seek>> call, Response<List<Seek>> response) {
+                util.hideLoading();
                 if(response != null) {
                     List<Seek> seeks = response.body();
                     ArrayAdapter<Seek> adapter = new ArrayAdapter<Seek>(getContext(), android.R.layout.simple_expandable_list_item_1, seeks);
                     list.setAdapter(adapter);
+                    if(seeks.size() == 0){
+                        util.showAlert("Ops!!!", "Você não tem nenhuma solicitação cadastrada.");
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<List<Seek>> call, Throwable t) {
+                util.hideLoading();
+                util.showAlert("Ops!!!", "Algo de errado aconteceu.");
                 // Code....
             }
         });

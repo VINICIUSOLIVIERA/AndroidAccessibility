@@ -39,9 +39,7 @@ public class CreateSeekActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_seek);
-
         this.init();
-
     }
 
     @Override
@@ -75,8 +73,8 @@ public class CreateSeekActivity extends AppCompatActivity {
         this.id = (Long) extras.get("id");
         this.topic = (String) extras.get("topic");
         this.description = (String) extras.get("description");
-        this.lat = (float) extras.get("lat");
-        this.lng = (float) extras.get("lng");
+        this.lat = Float.parseFloat(extras.get("lat").toString());
+        this.lng = Float.parseFloat(extras.get("lng").toString());
 
         if(this.id != null){
             edit_topic.setText(this.topic);
@@ -103,10 +101,9 @@ public class CreateSeekActivity extends AppCompatActivity {
             SeekService service = retrofit.create(SeekService.class);
             Call<Seek> call;
             if(this.id == null){
-                util.showAlert("Aquiiiii", "Presta à atenção ");
                 call = service.create(user_id, seek);
             }else{
-                call = service.edit(seek, this.id, user_id);
+                call = service.edit(seek, user_id, this.id);
             }
 
             call.enqueue(new Callback<Seek>() {

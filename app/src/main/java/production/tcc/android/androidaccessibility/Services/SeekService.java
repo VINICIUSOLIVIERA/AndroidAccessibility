@@ -15,13 +15,13 @@ public interface SeekService {
     @GET("seeks")
     public Call<List<Seek>> all();
 
-    @GET("seeks/user/{user_id}")
+    @GET("user/{user_id}/seeks")
     public Call<List<Seek>> allByUser(@Path("user_id") Long user_id);
 
-    @GET("seek/{seek_id}/user/{user_id}")
+    @GET("user/{user_id}/seek/{seek_id}")
     public Call<List<Seek>> specificByUser(@Path("seek_id") Long seek_id, @Path("user_id") Long user_id);
 
-    @POST("seek/user/{user_id}")
+    @POST("user/{user_id}/seek")
     public Call<Seek> create(@Path("user_id") Long user_id, @Body Seek seek);
 
     @PUT("user/{user_id}/seek/{seek_id}")

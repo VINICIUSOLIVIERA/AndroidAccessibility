@@ -1,12 +1,16 @@
 package production.tcc.android.androidaccessibility.Activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -126,16 +130,21 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void changeCreateSeek(){
-//        LatLng location = this.
-//        Intent intent = new Intent(this, CreateSeekActivity.class);
-//        intent.putExtra("lat", location.latitude);
-//        intent.putExtra("lng", location.longitude);
-//        startActivityForResult(intent, RESULT_OK);
+        LatLng location = userLocationCurrent();
+        Intent intent = new Intent(this, CreateSeekActivity.class);
+        intent.putExtra("lat", location.latitude);
+        intent.putExtra("lng", location.longitude);
+        startActivity(intent);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Toast.makeText(this, "Result SIM", Toast.LENGTH_SHORT).show();
-        super.onActivityResult(requestCode, resultCode, data);
+    public LatLng userLocationCurrent(){
+        LocationManager locationManager = (LocationManager) this.getSystemService(this.LOCATION_SERVICE);
+        @SuppressLint("MissingPermission")
+        Location location = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
+
+        if (location != null) {
+            return new LatLng(location.getLatitude(), location.getLongitude());
+        }
+        return null;
     }
 }
