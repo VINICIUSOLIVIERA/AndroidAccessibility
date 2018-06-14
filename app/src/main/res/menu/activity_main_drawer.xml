@@ -5,9 +5,9 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_register"
+            android:id="@+id/nav_map"
             android:icon="@drawable/ic_location"
-            android:title="Cadastrar" />
+            android:title="Mapa" />
         <item
             android:id="@+id/nav_all"
             android:icon="@drawable/ic_list"

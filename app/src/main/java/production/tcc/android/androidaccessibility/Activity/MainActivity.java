@@ -66,6 +66,10 @@ public class MainActivity extends AppCompatActivity implements
         /***
          * Map
          */
+        this.fragmentMap();
+    }
+
+    public void fragmentMap(){
         Fragment map_fragment = new MapsFragment();
         this.fragmentTransaction = getSupportFragmentManager().beginTransaction();
         this.fragmentTransaction.add(R.id.main_content, map_fragment);
@@ -87,8 +91,8 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.nav_register) {
-
+        if (id == R.id.nav_map) {
+            this.fragmentMap();
         } else if (id == R.id.nav_all) {
             Fragment seek_fragment = new AllSeekFragment();
             this.fragmentTransaction = getSupportFragmentManager().beginTransaction();

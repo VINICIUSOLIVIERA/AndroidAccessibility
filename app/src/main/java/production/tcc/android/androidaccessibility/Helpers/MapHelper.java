@@ -18,6 +18,17 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.List;
+
+import production.tcc.android.androidaccessibility.Config.RetrofitConfig;
+import production.tcc.android.androidaccessibility.Config.Util;
+import production.tcc.android.androidaccessibility.Models.Seek;
+import production.tcc.android.androidaccessibility.Services.SeekService;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
 public abstract class MapHelper extends Fragment implements OnMapReadyCallback, LocationListener {
 
     protected GoogleMap map;
@@ -77,6 +88,7 @@ public abstract class MapHelper extends Fragment implements OnMapReadyCallback, 
         if(locationCurrent != null){
             this.moveCamera(locationCurrent, 15, true);
         }
+        this.loadMarker();
     }
 
     @Override
@@ -97,6 +109,40 @@ public abstract class MapHelper extends Fragment implements OnMapReadyCallback, 
     @Override
     public void onProviderDisabled(String s) {
 
+    }
+
+    public  void loadMarker(){
+        final Util util = new Util(getContext());
+        Long user_id = Long.parseLong(util.getSharendPreferences("id"));
+        util.showLoading("Aguarde!", "Carregando os pontos...");
+
+        Retrofit retrofit = new RetrofitConfig().init();
+        SeekService service = retrofit.create(SeekService.class);
+        Call<List<Seek>> call = service.allByUser(user_id);
+
+        call.enqueue(new Callback<List<Seek>>() {
+            @Override
+            public void onResponse(Call<List<Seek>> call, Response<List<Seek>> response) {
+                util.hideLoading();
+                if(response != null) {
+                    List<Seek> seeks = response.body();
+                    for(Seek s : seeks){
+                        MarkerOptions marker = new MarkerOptions().position(new LatLng(s.getLat(), s.getLng())).title(s.getTopic()).snippet(s.getDescription());
+                        map.addMarker(marker).setTag(s.getId());
+                    }
+                    if(seeks.size() == 0){
+                        util.showAlert("Ops!!!", "Você não tem nenhuma solicitação cadastrada.");
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Seek>> call, Throwable t) {
+                util.hideLoading();
+                util.showAlert("Ops!!!", "Algo de errado aconteceu.");
+                // Code....
+            }
+        });
     }
 
 }
